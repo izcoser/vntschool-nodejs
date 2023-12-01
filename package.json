@@ -1,0 +1,11 @@
+{
+  "name": "gerenciador-de-clientes-nodejs",
+  "version": "1.0.0",
+  "description": "Um gerenciador de clientes com funcionalidades básicas de CRUD, API, persistência de dados e testes.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
