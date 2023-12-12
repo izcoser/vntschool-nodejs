@@ -1,15 +1,43 @@
-
 const fetch = require("node-fetch");
 
 const baseUrl = "http://127.0.0.1:3000";
-
-const delay = ms => new Promise(res => setTimeout(res, ms));
 
 // Test for POST /cadastrarCliente
 const cadastrarClienteTest = async () => {
   const data = {
     nome: "TestNome",
     sobrenome: "TestSobrenome",
+    cpf: "TestCPF",
+    telefone: "TestTelefone",
+    logradouro: "TestLogradouro",
+    numero: "TestNumero",
+    complemento: "TestComplemento",
+    bairro: "TestBairro",
+    cidade: "TestCidade",
+    estado: "TestEstado",
+    cep: "TestCEP",
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/cadastrarCliente`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.text();
+    console.log(result);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
+// Test for POST /cadastrarCliente
+const cadastrarClienteTestErro = async () => {
+  const data = {
+    sobrenome: "TestSobrenome", // faltando o nome do cliente.
     cpf: "TestCPF",
     telefone: "TestTelefone",
     logradouro: "TestLogradouro",
@@ -90,6 +118,7 @@ const deletarClienteTest = async () => {
 // Run the tests
 (async () => {
   await cadastrarClienteTest();
+  await cadastrarClienteTestErro();
   await lerClienteTest();
   await atualizarClienteTest();
   await deletarClienteTest();

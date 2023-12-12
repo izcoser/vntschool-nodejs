@@ -1,5 +1,4 @@
-const http = require("node:http");
-const fs = require("node:fs");
+const express = require("express");
 const {
   sequelize,
   insertClient,
@@ -8,8 +7,37 @@ const {
   deleteClient,
 } = require("./models");
 
-const hostname = "127.0.0.1";
+const ROUTES = {
+  CADASTRAR: "/cadastrarCliente",
+  LER: "/lerCliente",
+  ATUALIZAR: "/atualizarCliente",
+  DELETAR: "/deletarCliente",
+};
+
 const port = 3000;
+
+const app = express();
+
+const verifyData = (data) => {
+  for (const field of [
+    "nome",
+    "sobrenome",
+    "cpf",
+    "telefone",
+    "logradouro",
+    "numero",
+    "complemento",
+    "bairro",
+    "cidade",
+    "estado",
+    "cep",
+  ]) {
+    if (!(field in data)) {
+      return [false, field];
+    }
+  }
+  return [true, ""];
+};
 
 const handleCadastrarCliente = async (req, res) => {
   let data = "";
@@ -20,12 +48,20 @@ const handleCadastrarCliente = async (req, res) => {
     try {
       console.log("Cadastrando cliente...");
       const fullData = JSON.parse(data);
-
-      console.log({ fullData });
-      await insertClient(fullData);
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/plain");
-      res.end("Cliente adicionado.");
+      const [validData, missingField] = verifyData(fullData);
+      if (validData) {
+        console.log({ fullData });
+        await insertClient(fullData);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/plain");
+        res.end("Cliente adicionado.");
+      } else {
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "text/plain");
+        res.end(
+          `Campo ${missingField} não encontrado, cliente não pode ser cadastrado.`
+        );
+      }
     } catch (e) {
       console.log(e);
     }
@@ -33,10 +69,10 @@ const handleCadastrarCliente = async (req, res) => {
 };
 
 const handleLerCliente = async (req, res) => {
-  const cpf = req.url.split("/").at(-1);
-  console.log({cpf});
+  const cpf = req.params.cpf;
+  console.log({ cpf });
   const client = await readClient(cpf);
-  console.log({client});
+  console.log({ client });
   if (client) {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(client.toJSON()));
@@ -73,7 +109,7 @@ const handleAtualizarCliente = async (req, res) => {
 };
 
 const handleDeleteCliente = async (req, res) => {
-  const cpf = req.url.split("/").at(-1);
+  const cpf = req.params.cpf;
   const success = await deleteClient(cpf);
   res.setHeader("Content-Type", "text/plain");
   if (success) {
@@ -86,19 +122,23 @@ const handleDeleteCliente = async (req, res) => {
 (async () => {
   await sequelize.sync();
 
-  const server = http.createServer(async (req, res) => {
-    if (req.method === "POST" && req.url === "/cadastrarCliente") {
-      await handleCadastrarCliente(req, res);
-    } else if (req.method === "GET" && req.url.includes("/lerCliente")) {
-      await handleLerCliente(req, res);
-    } else if (req.method === "POST" && req.url === "/atualizarCliente") {
-      await handleAtualizarCliente(req, res);
-    } else if (req.method === "DELETE" && req.url.includes("/deletarCliente")) {
-      await handleDeleteCliente(req, res);
-    }
+  app.post(ROUTES.CADASTRAR, async (req, res) => {
+    await handleCadastrarCliente(req, res);
   });
 
-  server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+  app.get(`${ROUTES.LER}/:cpf`, async (req, res) => {
+    await handleLerCliente(req, res);
+  });
+
+  app.post(ROUTES.ATUALIZAR, async (req, res) => {
+    await handleAtualizarCliente(req, res);
+  });
+
+  app.delete(`${ROUTES.DELETAR}/:cpf`, async (req, res) => {
+    await handleDeleteCliente(req, res);
+  });
+
+  app.listen(port, () => {
+    console.log(`App escutando na porta ${port}.`);
   });
 })();
