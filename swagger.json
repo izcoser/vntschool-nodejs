@@ -1,0 +1,196 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Interface Swagger para Gerência de Clientes",
+    "version": "1.0.0",
+    "description": "Documentação da API."
+  },
+  "paths": {
+    "/cadastrarCliente": {
+      "post": {
+        "summary": "Cadastrar Cliente",
+        "description": "Cadastra um novo cliente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "sobrenome": { "type": "string" },
+                  "cpf": { "type": "string" },
+                  "telefone": { "type": "string" },
+                  "logradouro": { "type": "string" },
+                  "numero": { "type": "string" },
+                  "complemento": { "type": "string" },
+                  "bairro": { "type": "string" },
+                  "cidade": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "cep": { "type": "string" }
+                },
+                "required": [
+                  "nome",
+                  "sobrenome",
+                  "cpf",
+                  "telefone",
+                  "logradouro",
+                  "numero",
+                  "bairro",
+                  "cidade",
+                  "estado",
+                  "cep"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente adicionado."
+          }
+        }
+      }
+    },
+    "/lerCliente/{cpf}": {
+      "get": {
+        "summary": "Ler Cliente",
+        "description": "Obtém dados de um cliente.",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "nome": "John",
+                  "sobrenome": "Doe",
+                  "cpf": "12345678901",
+                  "telefone": "555-1234",
+                  "logradouro": "Street",
+                  "numero": "123",
+                  "complemento": "Apt 4",
+                  "bairro": "Downtown",
+                  "cidade": "City",
+                  "estado": "ST",
+                  "cep": "12345-678"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado.",
+            "content": {
+              "text/plain": {
+                "example": {
+                  "error": "Cliente não encontrado."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/atualizarCliente": {
+      "post": {
+        "summary": "Atualizar Cliente",
+        "description": "Atualizar dados de um cliente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": { "type": "string" },
+                  "nome": { "type": "string" },
+                  "sobrenome": { "type": "string" },
+                  "telefone": { "type": "string" },
+                  "logradouro": { "type": "string" },
+                  "numero": { "type": "string" },
+                  "complemento": { "type": "string" },
+                  "bairro": { "type": "string" },
+                  "cidade": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "cep": { "type": "string" },
+                  "key": { "type": "string" }
+                },
+                "required": ["key"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "nome": "John Atualizado",
+                  "sobrenome": "Doe Atualizado",
+                  "cpf": "12345678901",
+                  "telefone": "555-1234",
+                  "logradouro": "Street",
+                  "numero": "123",
+                  "complemento": "Apt 4",
+                  "bairro": "Downtown",
+                  "cidade": "City",
+                  "estado": "ST",
+                  "cep": "12345-678"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado.",
+            "content": {
+              "text/plain": {
+                "example": {
+                  "error": "Cliente não encontrado."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deletarCliente/{cpf}": {
+      "delete": {
+        "summary": "Deletar Cliente",
+        "description": "Delete dados de um cliente.",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente deletado."
+          },
+          "404": {
+            "description": "Cliente não encontrado.",
+            "content": {
+              "text/plain": {
+                "example": {
+                  "error": "Cliente não encontrado."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
