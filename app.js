@@ -1,9 +1,9 @@
-const http = require("node:http");
-const fs = require("node:fs");
+import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
 
 const read = (file) => {
   try {
-    const data = fs.readFileSync("clientes.json", "utf8");
+    const data = readFileSync("clientes.json", "utf8");
     return data;
   } catch (err) {
     console.error(err);
@@ -14,7 +14,7 @@ const read = (file) => {
 const hostname = "127.0.0.1";
 const port = 3000;
 
-const server = http.createServer((req, res) => {
+const server = createServer((req, res) => {
   if (req.method === "GET" && req.url === "/clientes") {
     const contents = read("clientes.json");
     res.statusCode = 200;
