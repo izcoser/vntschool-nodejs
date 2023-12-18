@@ -1,11 +1,6 @@
-const express = require("express");
-const { sequelize } = require("./models");
-const {
-  handleLerCliente,
-  handleAtualizarCliente,
-  handleDeleteCliente,
-  handleCadastrarCliente,
-} = require("./handlers");
+import express from "express";
+import { sequelize } from "./models.js";
+import { handleLerCliente, handleAtualizarCliente, handleDeleteCliente, handleCadastrarCliente } from "./handlers.js";
 
 const ROUTES = {
   CADASTRAR: "/cadastrarCliente",
@@ -16,12 +11,12 @@ const ROUTES = {
 
 const port = 3000;
 const app = express();
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+import { serve, setup } from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' assert {type: "json"}
 
 (async () => {
   await sequelize.sync();
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/docs', serve, setup(swaggerDocument));
 
   app.post(ROUTES.CADASTRAR, async (req, res) => {
     await handleCadastrarCliente(req, res);
