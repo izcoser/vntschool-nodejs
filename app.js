@@ -1,11 +1,5 @@
-const express = require("express");
-const {
-  sequelize,
-  insertClient,
-  readClient,
-  updateClient,
-  deleteClient,
-} = require("./models");
+import express from "express";
+import { sequelize, insertClient, readClient, updateClient, deleteClient } from "./models.js";
 
 const ROUTES = {
   CADASTRAR: "/cadastrarCliente",

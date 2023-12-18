@@ -13,5 +13,6 @@
     "node-fetch": "^2.6.1",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6"
-  }
+  },
+  "type": "module"
 }
