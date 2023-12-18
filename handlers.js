@@ -1,9 +1,4 @@
-const {
-  insertClient,
-  deleteClient,
-  readClient,
-  updateClient,
-} = require("./models");
+import { insertClient, deleteClient, readClient, updateClient } from "./models.js";
 
 const verifyData = (data) => {
   for (const field of [
@@ -105,7 +100,7 @@ const handleDeleteCliente = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   handleAtualizarCliente,
   handleDeleteCliente,
   handleLerCliente,
