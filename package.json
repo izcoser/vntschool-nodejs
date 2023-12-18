@@ -4,7 +4,7 @@
   "description": "Um gerenciador de clientes com funcionalidades básicas de CRUD, API, persistência de dados e testes.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +14,8 @@
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
     "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

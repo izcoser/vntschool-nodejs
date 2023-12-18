@@ -61,9 +61,11 @@ const handleLerCliente = async (req, res) => {
   const client = await readClient(cpf);
   console.log({ client });
   if (client) {
+    res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(client.toJSON()));
   } else {
+    res.statusCode = 404;
     res.setHeader("Content-Type", "text/plain");
     res.end("Cliente não encontrado.");
   }
@@ -80,14 +82,15 @@ const handleAtualizarCliente = async (req, res) => {
       console.log({ fullData });
       const client = await updateClient(fullData.key, fullData);
       if (client) {
+        const updatedData = client.dataValues;
+        res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify(client.toJSON()));
+        res.end(JSON.stringify(updatedData));
       } else {
+        res.statusCode = 404;
         res.setHeader("Content-Type", "text/plain");
         res.end("Cliente não encontrado.");
       }
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/plain");
     } catch (e) {
       console.log(e);
     }
@@ -99,8 +102,10 @@ const handleDeleteCliente = async (req, res) => {
   const success = await deleteClient(cpf);
   res.setHeader("Content-Type", "text/plain");
   if (success) {
+    res.statusCode = 200;
     res.end("Cliente deletado.");
   } else {
+    res.statusCode = 404;
     res.end("Cliente não encontrado.");
   }
 };
