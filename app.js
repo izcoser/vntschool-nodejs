@@ -1,12 +1,5 @@
-const http = require("node:http");
-const fs = require("node:fs");
-const {
-  sequelize,
-  insertClient,
-  readClient,
-  updateClient,
-  deleteClient,
-} = require("./models");
+import { createServer } from "node:http";
+import { sequelize, insertClient, readClient, updateClient, deleteClient } from "./models.js";
 
 const hostname = "127.0.0.1";
 const port = 3000;
@@ -86,7 +79,7 @@ const handleDeleteCliente = async (req, res) => {
 (async () => {
   await sequelize.sync();
 
-  const server = http.createServer(async (req, res) => {
+  const server = createServer(async (req, res) => {
     if (req.method === "POST" && req.url === "/cadastrarCliente") {
       await handleCadastrarCliente(req, res);
     } else if (req.method === "GET" && req.url.includes("/lerCliente")) {

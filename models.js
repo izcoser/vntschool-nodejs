@@ -1,4 +1,5 @@
-const Sequelize = require("sequelize");
+//const Sequelize = require("sequelize");
+import { Sequelize } from "sequelize";
 
 // const sequelize = new Sequelize({
 //   dialect: "sqlite",
@@ -126,7 +127,7 @@ const deleteClient = async (cpf) => {
   }
 };
 
-module.exports = {
+export {
   sequelize,
   Cliente,
   insertClient,
