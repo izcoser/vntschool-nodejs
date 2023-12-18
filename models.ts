@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+import Sequelize, { Error, Transaction } from "sequelize";
 
 // const sequelize = new Sequelize({
 //   dialect: "sqlite",
@@ -6,6 +6,7 @@ const Sequelize = require("sequelize");
 //   transactionType: "IMMEDIATE",
 // });
 
+//@ts-ignore
 const sequelize = new Sequelize("sqlite::memory:");
 const Cliente = sequelize.define("Cliente", {
   nome: Sequelize.STRING,
@@ -26,7 +27,7 @@ const Endereco = sequelize.define("Endereco", {
 
 Cliente.hasOne(Endereco, { as: "endereco" });
 
-const insertClient = async (clientData) => {
+const insertClient = async (clientData: ClientData) => {
   const {
     nome,
     sobrenome,
@@ -44,7 +45,7 @@ const insertClient = async (clientData) => {
   console.log({ clientData });
 
   await sequelize
-    .transaction(async (t) => {
+    .transaction(async (t: Transaction) => {
       const endereco = await Endereco.create(
         { logradouro, numero, complemento, bairro, cidade, estado, cep },
         { transaction: t }
@@ -59,15 +60,15 @@ const insertClient = async (clientData) => {
 
       await client.setEndereco(endereco, { transaction: t });
     })
-    .then((result) => {
+    .then(() => {
       console.log("Novo cliente adicionado.");
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error("Erro ao adicionar cliente:", error);
     });
 };
 
-const readClient = async (cpf) => {
+const readClient = async (cpf: string) => {
   console.log("Obtendo cliente com cpf ", cpf);
   const client = await Cliente.findOne({
     where: { cpf },
@@ -82,7 +83,7 @@ const readClient = async (cpf) => {
   }
 };
 
-const updateClient = async (cpf, updateData) => {
+const updateClient = async (cpf: string, updateData: Partial<ClientData>) => {
   console.log("Obtendo cliente com cpf ", cpf);
   console.log({ updateData });
   const client = await Cliente.findOne({
@@ -93,9 +94,9 @@ const updateClient = async (cpf, updateData) => {
     console.log("Cliente encontrado, realizando update.");
     for (const key in updateData) {
       if (key in client) {
-        client[key] = updateData[key];
+        client[key] = updateData[key as keyof ClientData];
       } else if (client.endereco && key in client.endereco) {
-        client.endereco[key] = updateData[key];
+        client.endereco[key] = updateData[key as keyof ClientData];
       }
     }
     await client.save();
@@ -106,7 +107,7 @@ const updateClient = async (cpf, updateData) => {
   }
 };
 
-const deleteClient = async (cpf) => {
+const deleteClient = async (cpf: string) => {
   console.log("Obtendo cliente com cpf ", cpf);
 
   const client = await Cliente.findOne({
@@ -126,11 +127,11 @@ const deleteClient = async (cpf) => {
   }
 };
 
-module.exports = {
+export{
   sequelize,
   Cliente,
   insertClient,
   readClient,
   updateClient,
   deleteClient,
-};
+}

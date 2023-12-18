@@ -1,16 +1,12 @@
 # vntschool-nodejs
 
-Implementação do módulo 6: Introdução a Testes utilizando Jest.js 
+Implementação do módulo 7:  Introdução ao TypeScript
 
-Neste módulo, instalamos o Jest e adicionamos os seguintes casos de teste:
+Neste módulo, adaptamos nosso código para TypeScript.
+
+Para gerar os arquivos JavaScript, use instale o TypeScript globalmente e rode `tsc`.
+
 ```
-  API Tests
-    ✓ Cadastrar Cliente Test (23 ms)
-    ✓ Cadastrar Cliente Error Test (2 ms)
-    ✓ Ler Cliente Test (8 ms)
-    ✓ Ler Cliente Error (4 ms)
-    ✓ Atualizar Cliente Test (5 ms)
-    ✓ Atualizar Cliente Test Error (3 ms)
-    ✓ Deletar Cliente Test (4 ms)
-    ✓ Deletar Cliente Test (3 ms)
+npm install typescript -g
+tsc
 ```

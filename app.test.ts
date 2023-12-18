@@ -16,7 +16,7 @@ const clienteExemplo = {
   cep: "TestCEP",
 };
 
-const makePostRequest = async (url, data) => {
+const makePostRequest = async (url: string, data: Object) => {
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -27,28 +27,28 @@ const makePostRequest = async (url, data) => {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
 
-const makeGetRequest = async (url) => {
+const makeGetRequest = async (url: string) => {
   try {
     const response = await fetch(url);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
 
-const makeDeleteRequest = async (url) => {
+const makeDeleteRequest = async (url: string) => {
   try {
     const response = await fetch(url, {
       method: "DELETE",
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
@@ -94,9 +94,9 @@ describe("API Tests", () => {
     const cliente = await result.json();
     for (const key in clienteExemplo) {
       if (key in cliente) {
-        expect(cliente[key]).toEqual(clienteExemplo[key]);
+        expect(cliente[key]).toEqual(clienteExemplo[key as keyof ClientData]);
       } else if (cliente.endereco && key in cliente.endereco) {
-        expect(cliente.endereco[key]).toEqual(clienteExemplo[key]);
+        expect(cliente.endereco[key]).toEqual(clienteExemplo[key as keyof ClientData]);
       }
     }
     expect(result.status).toEqual(200);
@@ -112,7 +112,7 @@ describe("API Tests", () => {
   });
 
   test("Atualizar Cliente Test", async () => {
-    const updateData = {
+    const updateData: Partial<ClientData> & {key: string } = {
       nome: "UpdatedNome",
       sobrenome: "UpdatedSobrenome",
       telefone: "UpdatedTelefone",
@@ -126,7 +126,7 @@ describe("API Tests", () => {
 
     const updatedCliente = await result.json();
     for(const key in updateData){
-      key != "key" && expect(updatedCliente[key]).toEqual(updateData[key]);
+      key != "key" && expect(updatedCliente[key]).toEqual(updateData[key as keyof ClientData]);
     }
     
     expect(result.status).toEqual(200);
@@ -168,3 +168,5 @@ describe("API Tests", () => {
   });
 
 });
+
+export {};

@@ -1,11 +1,7 @@
-const {
-  insertClient,
-  deleteClient,
-  readClient,
-  updateClient,
-} = require("./models");
+import { Request, Response } from "express-serve-static-core";
+import { insertClient, deleteClient, readClient, updateClient } from "./models";
 
-const verifyData = (data) => {
+const verifyData = (data: ClientData) => {
   for (const field of [
     "nome",
     "sobrenome",
@@ -26,7 +22,7 @@ const verifyData = (data) => {
   return [true, ""];
 };
 
-const handleCadastrarCliente = async (req, res) => {
+const handleCadastrarCliente = async (req: Request, res: Response) => {
   let data = "";
   req.on("data", (chunk) => {
     data += chunk;
@@ -55,7 +51,7 @@ const handleCadastrarCliente = async (req, res) => {
   });
 };
 
-const handleLerCliente = async (req, res) => {
+const handleLerCliente = async (req: Request, res: Response) => {
   const cpf = req.params.cpf;
   console.log({ cpf });
   const client = await readClient(cpf);
@@ -71,7 +67,7 @@ const handleLerCliente = async (req, res) => {
   }
 };
 
-const handleAtualizarCliente = async (req, res) => {
+const handleAtualizarCliente = async (req: Request, res: Response) => {
   let data = "";
   req.on("data", (chunk) => {
     data += chunk;
@@ -97,7 +93,7 @@ const handleAtualizarCliente = async (req, res) => {
   });
 };
 
-const handleDeleteCliente = async (req, res) => {
+const handleDeleteCliente = async (req: Request, res: Response) => {
   const cpf = req.params.cpf;
   const success = await deleteClient(cpf);
   res.setHeader("Content-Type", "text/plain");
@@ -110,7 +106,7 @@ const handleDeleteCliente = async (req, res) => {
   }
 };
 
-module.exports = {
+export{
   handleAtualizarCliente,
   handleDeleteCliente,
   handleLerCliente,
