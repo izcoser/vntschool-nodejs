@@ -14,3 +14,9 @@ Neste módulo, instalamos o Jest e adicionamos os seguintes casos de teste:
     ✓ Deletar Cliente Test (4 ms)
     ✓ Deletar Cliente Test (3 ms)
 ```
+
+Para rodar os testes:
+
+```
+NODE_OPTIONS=--experimental-vm-modules npm test
+```

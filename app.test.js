@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 const baseUrl = "http://127.0.0.1:3000";
 
