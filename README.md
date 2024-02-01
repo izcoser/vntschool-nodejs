@@ -1,6 +1,7 @@
+# Módulo cancelado após mudanças no escopo.
 # vntschool-nodejs
 
-Implementação do módulo 7:  Introdução ao TypeScript
+Implementação do módulo ?:  Introdução ao TypeScript
 
 Neste módulo, adaptamos nosso código para TypeScript.
 
