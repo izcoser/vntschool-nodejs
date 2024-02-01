@@ -1,6 +1,6 @@
 # vntschool-nodejs
 
-Módulo X: Usando Sqlite3.
+Módulo 4: Usando Sqlite3.
 
 Neste módulo, adaptaremos a nossa API para usar Sqlite3 no lugar do sistema de arquivos. Todas as rotas permanecem as mesmas.
 
