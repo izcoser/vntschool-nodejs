@@ -1,6 +1,6 @@
 # vntschool-nodejs
 
-Módulo 2: Desenvolvendo nossa primeira API Node.js
+Módulo 3: Desenvolvendo nossa primeira API Node.js
 
 Neste módulo, criamos a API simples possível em Node.js. A API:
 
