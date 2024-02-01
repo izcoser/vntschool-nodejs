@@ -1,26 +1,11 @@
 import { createServer } from "node:http";
-import { readFileSync } from "node:fs";
-
-const read = (file) => {
-  try {
-    const data = readFileSync("clientes.json", "utf8");
-    return data;
-  } catch (err) {
-    console.error(err);
-    return `Arquivo ${file} não encontrado.`;
-  }
-};
+import { handleRequest } from "./routes.js";
 
 const hostname = "127.0.0.1";
 const port = 3000;
 
 const server = createServer((req, res) => {
-  if (req.method === "GET" && req.url === "/clientes") {
-    const contents = read("clientes.json");
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.end(contents);
-  }
+  handleRequest(req, res);
 });
 
 server.listen(port, hostname, () => {
