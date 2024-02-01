@@ -1,6 +1,8 @@
+# Módulo cancelado após mudanças no escopo.
+
 # vntschool-nodejs
 
-Implementação do módulo 6: Introdução a Testes utilizando Jest.js 
+Implementação do módulo ?: Introdução a Testes utilizando Jest.js 
 
 Neste módulo, instalamos o Jest e adicionamos os seguintes casos de teste:
 ```
