@@ -19,7 +19,7 @@ const cadastrarClienteTest = async () => {
   };
 
   try {
-    const response = await fetch(`${baseUrl}/cadastrarCliente`, {
+    const response = await fetch(`${baseUrl}/cadastrar-cliente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const cadastrarClienteTestErro = async () => {
   };
 
   try {
-    const response = await fetch(`${baseUrl}/cadastrarCliente`, {
+    const response = await fetch(`${baseUrl}/cadastrar-cliente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const cadastrarClienteTestErro = async () => {
 // Test for GET /lerCliente
 const lerClienteTest = async () => {
   try {
-    const response = await fetch(`${baseUrl}/lerCliente/TestCPF`);
+    const response = await fetch(`${baseUrl}/ler-clientes`);
     const result = await response.json();
     console.log(result);
   } catch (error) {
@@ -86,14 +86,13 @@ const atualizarClienteTest = async () => {
   };
 
   try {
-    const response = await fetch(`${baseUrl}/atualizarCliente`, {
-      method: "POST",
+    const response = await fetch(`${baseUrl}/atualizar-cliente`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updateData),
     });
-
     const result = await response.json();
     console.log(result);
   } catch (error) {
@@ -104,7 +103,7 @@ const atualizarClienteTest = async () => {
 // Test for DELETE /deletarCliente
 const deletarClienteTest = async () => {
   try {
-    const response = await fetch(`${baseUrl}/deletarCliente/TestCPF`, {
+    const response = await fetch(`${baseUrl}/deletar-cliente/TestCPF`, {
       method: "DELETE",
     });
 

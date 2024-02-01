@@ -1,4 +1,4 @@
 # vntschool-nodejs
-Módulo 4: Desenvolvendo APIs com Express 
+Módulo 4: Usando o Sequelizer
 
-Neste módulo, usamos o Express para deixar nossa API mais robusta, com validação de dados e tratamento de erros.
+Neste módulo, usamos o ORM Sequelizer para gerenciar o acesso ao banco de dados. As rotas continuam iguais. 

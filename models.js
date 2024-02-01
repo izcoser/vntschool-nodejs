@@ -67,18 +67,14 @@ const insertClient = async (clientData) => {
     });
 };
 
-const readClient = async (cpf) => {
-  console.log("Obtendo cliente com cpf ", cpf);
-  const client = await Cliente.findOne({
-    where: { cpf },
+const readClient = async () => {
+  const clients = await Cliente.findAll({
     include: "endereco",
+    raw: true
   });
-  if (client) {
-    console.log("Cliente encontrado: ", client.toJSON());
-    return client;
-  } else {
-    console.log("Cliente não encontrado.");
-    return null;
+  if (clients) {
+    console.log("Clientes encontrado: ", clients);
+    return clients;
   }
 };
 
