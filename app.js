@@ -1,13 +1,24 @@
 import { createServer } from "node:http";
-import { handleRequest } from "./routes.js";
+import { readFile } from 'node:fs';
 
 const hostname = "127.0.0.1";
 const port = 3000;
 
-const server = createServer((req, res) => {
-  handleRequest(req, res);
-});
+readFile("./clientes.json", "utf-8", (erro, conteudo) => {
+  if (erro) {
+    console.log("Falha na leitura do arquivo", erro);
+    return;
+  }
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+  console.log(`Conteúdo: ${conteudo}`);
+
+  const server = createServer((req, res) => {
+    res.statusCode = 200;
+    res.setHeader("Content-type", "application/json; charset=utf-8");
+    res.end(conteudo);
+  });
+
+  server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+  });
 });
