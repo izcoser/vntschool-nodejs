@@ -1,8 +1,8 @@
 # vntschool-nodejs
 
-Módulo 2: Desenvolvendo nossa primeira API Node.js
+Módulo X: Usando Sqlite3.
 
-Neste módulo, criamos a API simples possível em Node.js. A API:
+Neste módulo, adaptaremos a nossa API para usar Sqlite3 no lugar do sistema de arquivos. Todas as rotas permanecem as mesmas.
 
 1. Lê dados de um arquivo e retorna para o usuário, no endpoint GET 127.0.0.1:3000/ler-clientes.
 
