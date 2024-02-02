@@ -1,10 +1,19 @@
-import { readFile, writeFile } from "node:fs";
+import {
+  readClient,
+  updateClient,
+  deleteClient,
+  insertClient,
+} from "./models.js";
 
-const filename = "clientes.json";
-const format = "utf8";
-
-const camposCliente = ["nome", "sobrenome", "endereco", "cpf", "telefone"];
-const camposClienteObrigatorios = ["nome", "sobrenome", "cpf"];
+const camposCliente = [
+  "nome",
+  "sobrenome",
+  "endereco",
+  "cpf",
+  "telefone",
+  "cep",
+];
+const camposClienteObrigatorios = ["nome", "sobrenome", "cpf", "cep"];
 
 // Recebe um método de rota (POST, DELETE, PATCH)
 // e um dado (Object ou string) e verifica está
@@ -50,143 +59,85 @@ const verificaAtributos = (metodo, dado) => {
   }
 };
 
-const lerClientes = (res) => {
-  readFile(filename, format, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      res.statusCode = 200;
-      res.end(data);
-    }
-  });
+const lerClientes = async (res) => {
+  const [clientes, erro] = await readClient();
+  if (erro) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erro }));
+  } else {
+    res.statusCode = 200;
+    console.log(clientes);
+    res.end(clientes);
+  }
 };
 
-const cadastrarCliente = (cliente, res) => {
-  readFile(filename, format, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      const arquivo = JSON.parse(data);
-      const clienteObj = JSON.parse(cliente);
+const cadastrarCliente = async (cliente, res) => {
+  const clienteObj = JSON.parse(cliente);
+  const [ok, erro] = verificaAtributos("POST", clienteObj);
 
-      const [ok, erro] = verificaAtributos("POST", clienteObj);
+  if (erro) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erro }));
+    return;
+  }
 
-      if (erro) {
-        res.statusCode = 500;
-        res.end(JSON.stringify({ error: erro }));
-        return;
-      }
+  const [novoCliente, erroCliente] = await insertClient(clienteObj);
 
-      arquivo.clientes.push(clienteObj);
-      writeFile(filename, JSON.stringify(arquivo), (err) => {
-        if (err) {
-          res.statusCode = 500;
-          res.end(JSON.stringify({ error: err.message }));
-        } else {
-          res.statusCode = 200;
-          res.end(JSON.stringify(clienteObj));
-        }
-      });
-    }
-  });
+  if (erroCliente) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erroCliente }));
+  } else {
+    res.statusCode = 200;
+    res.end(JSON.stringify(novoCliente));
+  }
 };
 
-const atualizarCliente = (novosDados, res) => {
-  readFile(filename, format, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      const arquivo = JSON.parse(data);
-      const novosDadosObj = JSON.parse(novosDados);
+const atualizarCliente = async (novosDados, res) => {
+  const novosDadosObj = JSON.parse(novosDados);
+  const [ok, erro] = verificaAtributos("PATCH", novosDadosObj);
 
-      const [ok, erro] = verificaAtributos("PATCH", novosDadosObj);
+  if (erro) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erro }));
+    return;
+  }
 
-      if (erro) {
-        res.statusCode = 500;
-        res.end(JSON.stringify({ error: erro }));
-        return;
-      }
+  const [clienteAtualizado, erroAtualizar] = await updateClient(novosDadosObj.key);
 
-      const cliente = arquivo.clientes.find((c) => c.cpf === novosDadosObj.key);
-
-      if (cliente) {
-        for (const key in novosDadosObj) {
-          if (key in cliente) {
-            cliente[key] = novosDadosObj[key];
-          }
-        }
-
-        writeFile(filename, JSON.stringify(arquivo), (err) => {
-          if (err) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ error: err.message }));
-          } else {
-            res.statusCode = 200;
-            res.end(JSON.stringify(cliente));
-          }
-        });
-      } else {
-        res.statusCode = 404;
-        res.end(
-          JSON.stringify({
-            error: `Cliente com CPF ${novosDadosObj.key} não encontrado.`,
-          })
-        );
-      }
-    }
-  });
+  if (erroAtualizar) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erroAtualizar }));
+  } else {
+    res.statusCode = 200;
+    res.end(JSON.stringify(clienteAtualizado));
+  }
 };
 
-const deletarCliente = (cpfCliente, res) => {
-  readFile(filename, format, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.end(JSON.stringify({ error: err.message }));
-    } else {
-      const arquivo = JSON.parse(data);
+const deletarCliente = async (cpfCliente, res) => {
+  const [ok, erro] = verificaAtributos("DELETE", cpfCliente);
 
-      const [ok, erro] = verificaAtributos("DELETE", cpfCliente);
+  if (erro) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erro }));
+    return;
+  }
 
-      if (erro) {
-        res.statusCode = 500;
-        res.end(JSON.stringify({ error: erro }));
-        return;
-      }
+  const [success, erroDeletar] = await deleteClient(cpfCliente);
 
-      // Filtra a lista de clientes, removendo aquele que tem o CPF especificado.
-      const novoClientes = arquivo.clientes.filter((c) => c.cpf !== cpfCliente);
-
-      if (novoClientes.length < arquivo.clientes.length) {
-        arquivo.clientes = novoClientes;
-        writeFile(filename, JSON.stringify(arquivo), (err) => {
-          if (err) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ error: err.message }));
-          } else {
-            res.statusCode = 200;
-            res.end(
-              JSON.stringify({
-                msg: `Cliente de cpf ${cpfCliente} deletado com sucesso!`,
-              })
-            );
-          }
-        });
-      } else {
-        res.statusCode = 404;
-        res.end(
-          JSON.stringify({
-            error: `Cliente com CPF ${cpfCliente} não encontrado.`,
-          })
-        );
-      }
-    }
-  });
+  if (erroDeletar) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ error: erroDeletar }));
+  } else {
+    res.statusCode = 200;
+    res.end(
+      JSON.stringify({
+        msg: `Cliente de cpf ${cpfCliente} deletado com sucesso!`,
+      })
+    );
+  }
 };
 
-const rotas = (req, res) => {
+const rotas = async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   req.on("error", (e) => {
@@ -196,7 +147,7 @@ const rotas = (req, res) => {
   });
 
   if (req.method === "GET") {
-    lerClientes(res);
+    await lerClientes(res);
     return;
   }
   if (req.method === "POST") {
@@ -204,8 +155,8 @@ const rotas = (req, res) => {
     req.on("data", (chunk) => {
       corpo.push(chunk);
     });
-    req.on("end", () => {
-      cadastrarCliente(corpo, res);
+    req.on("end", async () => {
+      await cadastrarCliente(corpo, res);
     });
     return;
   }
@@ -214,14 +165,14 @@ const rotas = (req, res) => {
     req.on("data", (chunk) => {
       corpo.push(chunk);
     });
-    req.on("end", () => {
-      atualizarCliente(corpo, res);
+    req.on("end", async () => {
+      await atualizarCliente(corpo, res);
     });
     return;
   }
   if (req.method === "DELETE") {
     const cpf = req.url.split("/").at(-1);
-    deletarCliente(cpf, res);
+    await deletarCliente(cpf, res);
     return;
   }
 
